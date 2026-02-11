@@ -1,0 +1,42 @@
+[
+  {
+    "id": "A",
+    "schemeId": "0x1",
+    "curve": "Curve25519",
+    "dhPrimitive": "X25519 (RFC 7748 §5)",
+    "pointCompression": false,
+    "kdf": "ANSI-X9.63-KDF (SECG SEC 1 v2 §3.6.1)",
+    "hash": "SHA-256",
+    "sharedInfo1": "ephemeral public key octet string",
+    "sharedInfo2": "empty string",
+    "mac": "HMAC-SHA-256",
+    "macKeyLen": 32,
+    "macLen": 8,
+    "enc": "AES-128-CTR",
+    "encKeyLen": 16,
+    "icbLen": 16,
+    "ephPubKeySize": 32,
+    "backwardsCompatibility": false,
+    "schemeOutputSize": "256-bit public key + 64-bit MAC + input size"
+  },
+  {
+    "id": "B",
+    "schemeId": "0x2",
+    "curve": "secp256r1",
+    "dhPrimitive": "EC Cofactor Diffie-Hellman Primitive (SECG SEC 1 v2 §3.3.2)",
+    "pointCompression": true,
+    "kdf": "ANSI-X9.63-KDF (SECG SEC 1 v2 §3.6.1)",
+    "hash": "SHA-256",
+    "sharedInfo1": "ephemeral public key octet string",
+    "sharedInfo2": "empty string",
+    "mac": "HMAC-SHA-256",
+    "macKeyLen": 32,
+    "macLen": 8,
+    "enc": "AES-128-CTR",
+    "encKeyLen": 16,
+    "icbLen": 16,
+    "ephPubKeySize": 33,
+    "backwardsCompatibility": false,
+    "schemeOutputSize": "264-bit public key + 64-bit MAC + input size"
+  }
+]

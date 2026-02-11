@@ -1,0 +1,34 @@
+{
+  "name": "@typhon-sec/3gpp-security-toolkit",
+  "version": "0.1.0",
+  "description": "Machine-readable extracts and CLI tools for 3GPP security specifications",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "3gpp": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "test": "node --test dist/**/*.test.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "glob": "^11.0.0",
+    "mammoth": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/typhon-sec/3gpp-security-toolkit.git"
+  },
+  "keywords": ["3gpp", "5g", "security", "ts33501", "ecies", "kdf", "telecom"]
+}

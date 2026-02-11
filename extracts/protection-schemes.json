@@ -1,0 +1,7 @@
+[
+  { "id": "0x0", "name": "null-scheme", "description": "No concealment — SUPI transmitted in the clear" },
+  { "id": "0x1", "name": "Profile A", "description": "ECIES with Curve25519 (X25519 DH, AES-128-CTR, HMAC-SHA-256)" },
+  { "id": "0x2", "name": "Profile B", "description": "ECIES with secp256r1 (EC Cofactor DH, AES-128-CTR, HMAC-SHA-256)" },
+  { "range": "0x3-0xB", "name": "Reserved", "description": "Reserved for future standardized protection schemes" },
+  { "range": "0xC-0xF", "name": "Proprietary", "description": "Reserved for proprietary protection schemes specified by the home operator" }
+]

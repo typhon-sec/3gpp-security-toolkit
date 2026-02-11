@@ -1,0 +1,3 @@
+# E.1	Introduction
+
+The UE in RRC_CONNECTED mode sends measurement reports to the network in accordance with the measurement configuration provided by the network. These measurement reports have security values in being useful for detection of false base stations or SUPI/5G-GUTI catchers. The network, in an implementation specific way, could choose UEs or tracking areas or duration for which the measurement reports are to be analysed for detection of false base station. The present Annex gives examples of how measurement reports from UEs could be used for detection of false base station, and some actions thereafter.

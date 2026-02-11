@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Smoke test — CLI help
+        run: node dist/cli.js --help
+      - name: Smoke test — list sections
+        run: node dist/cli.js list
+      - name: Smoke test — KDF catalog
+        run: node dist/cli.js kdf
+      - name: Smoke test — algorithms
+        run: node dist/cli.js algorithms
+      - name: Smoke test — ECIES profiles
+        run: node dist/cli.js ecies
+      - name: Smoke test — search
+        run: node dist/cli.js search "SUPI concealment"
+      - name: Validate JSON extracts
+        run: |
+          for f in extracts/*.json; do
+            echo "Validating $f..."
+            node -e "JSON.parse(require('fs').readFileSync('$f', 'utf-8'))"
+          done

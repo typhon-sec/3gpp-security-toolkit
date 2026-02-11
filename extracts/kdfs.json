@@ -1,0 +1,341 @@
+[
+  {
+    "id": "kdf-interface",
+    "name": "KDF interface and input parameter construction",
+    "section": "A.1",
+    "fc": null,
+    "inputKey": null,
+    "parameters": [],
+    "outputKey": null,
+    "applicability": "General framework — defines FC value space 0x69–0x79, 0x7B–0x7D, 0x83–0x84",
+    "notes": "All key derivations use KDF from TS 33.220 Annex B.2.0"
+  },
+  {
+    "id": "kausf",
+    "name": "KAUSF derivation",
+    "section": "A.2",
+    "fc": "0x6A",
+    "inputKey": "CK || IK",
+    "parameters": [
+      { "id": "P0", "name": "serving network name", "length": "variable (per TS 24.501)" },
+      { "id": "P1", "name": "SQN ⊕ AK", "length": "0x00 0x06" }
+    ],
+    "outputKey": "KAUSF",
+    "applicability": "5G AKA only",
+    "notes": "SQN XOR AK sent as part of AUTN. If AK not used, treat as 000…0."
+  },
+  {
+    "id": "ck-ik-prime",
+    "name": "CK' and IK' derivation",
+    "section": "A.3",
+    "fc": null,
+    "inputKey": "CK || IK",
+    "parameters": [
+      { "id": "P0", "name": "serving network name (as access network identity)", "length": "variable" }
+    ],
+    "outputKey": "CK' || IK'",
+    "applicability": "EAP-AKA' based procedures",
+    "notes": "Uses KDF from TS 33.402 clause A.2 with serving network name as P0"
+  },
+  {
+    "id": "res-star",
+    "name": "RES* and XRES* derivation",
+    "section": "A.4",
+    "fc": "0x6B",
+    "inputKey": "CK || IK",
+    "parameters": [
+      { "id": "P0", "name": "serving network name", "length": "variable (per TS 24.501)" },
+      { "id": "P1", "name": "RAND", "length": "0x00 0x10" },
+      { "id": "P2", "name": "RES or XRES", "length": "variable (0x00 0x04 to 0x00 0x10)" }
+    ],
+    "outputKey": "RES* / XRES* (128 least significant bits)",
+    "applicability": "5G AKA",
+    "notes": "Output is the 128 least significant bits of KDF output"
+  },
+  {
+    "id": "hres-star",
+    "name": "HRES* and HXRES* derivation",
+    "section": "A.5",
+    "fc": null,
+    "inputKey": null,
+    "parameters": [
+      { "id": "P0", "name": "RAND", "length": "16 bytes" },
+      { "id": "P1", "name": "RES* or XRES*", "length": "16 bytes" }
+    ],
+    "outputKey": "HRES* / HXRES* (128 least significant bits of SHA-256)",
+    "applicability": "5G AKA",
+    "notes": "Uses SHA-256 hash (not KDF). Input is P0 || P1 concatenation."
+  },
+  {
+    "id": "kseaf",
+    "name": "KSEAF derivation",
+    "section": "A.6",
+    "fc": "0x6C",
+    "inputKey": "KAUSF",
+    "parameters": [
+      { "id": "P0", "name": "serving network name", "length": "variable" }
+    ],
+    "outputKey": "KSEAF",
+    "applicability": "All 5G authentication methods",
+    "notes": "Serving network name constructed per clause 6.1.1.4"
+  },
+  {
+    "id": "kamf",
+    "name": "KAMF derivation",
+    "section": "A.7",
+    "fc": "0x6D",
+    "inputKey": "KSEAF (256-bit)",
+    "parameters": [
+      { "id": "P0", "name": "SUPI (IMSI, NAI, GCI, or GLI)", "length": "variable" },
+      { "id": "P1", "name": "ABBA parameter", "length": "variable" }
+    ],
+    "outputKey": "KAMF",
+    "applicability": "All 5G authentication methods",
+    "notes": "ABBA default value 0x0000; variable length for forward compatibility"
+  },
+  {
+    "id": "algorithm-keys",
+    "name": "Algorithm key derivation (NAS/RRC/UP)",
+    "section": "A.8",
+    "fc": "0x69",
+    "inputKey": "KAMF (for NAS keys) or KgNB/KSN (for RRC/UP keys)",
+    "parameters": [
+      { "id": "P0", "name": "algorithm type distinguisher", "length": "0x00 0x01" },
+      { "id": "P1", "name": "algorithm identity", "length": "0x00 0x01" }
+    ],
+    "outputKey": "KNASint, KNASenc, KRRCint, KRRCenc, KUPint, KUPenc",
+    "applicability": "All 5G — NAS, RRC, UP algorithm keys",
+    "notes": "P0 type distinguishers: 0x01=N-NAS-enc-alg, 0x02=N-NAS-int-alg, 0x03=N-RRC-enc-alg, 0x04=N-RRC-int-alg, 0x05=N-UP-enc-alg, 0x06=N-UP-int-alg. Algorithm identity in 4 LSBs."
+  },
+  {
+    "id": "kgnb",
+    "name": "KgNB / KWAGF / KTNGF / KTWIF / KN3IWF derivation",
+    "section": "A.9",
+    "fc": "0x6E",
+    "inputKey": "KAMF (256-bit)",
+    "parameters": [
+      { "id": "P0", "name": "uplink NAS COUNT", "length": "0x00 0x04" },
+      { "id": "P1", "name": "access type distinguisher", "length": "0x00 0x01" }
+    ],
+    "outputKey": "KgNB (0x01=3GPP) or KWAGF/KTNGF/KTWIF/KN3IWF (0x02=non-3GPP)",
+    "applicability": "Initial AS security establishment",
+    "notes": "P1=0x01 for 3GPP access (KgNB), P1=0x02 for non-3GPP access. N5CW/AUN3 devices set uplink NAS COUNT to 0."
+  },
+  {
+    "id": "nh",
+    "name": "NH (Next Hop) derivation",
+    "section": "A.10",
+    "fc": "0x6F",
+    "inputKey": "KAMF (256-bit)",
+    "parameters": [
+      { "id": "P0", "name": "SYNC-input (KgNB for initial, previous NH for subsequent)", "length": "0x00 0x20" }
+    ],
+    "outputKey": "NH",
+    "applicability": "Handover key chaining",
+    "notes": "Creates NH chain — each new NH derived from previous NH"
+  },
+  {
+    "id": "kng-ran-star-gnb",
+    "name": "KNG-RAN* derivation for target gNB",
+    "section": "A.11",
+    "fc": "0x70",
+    "inputKey": "NH (256-bit) or current KgNB/KeNB",
+    "parameters": [
+      { "id": "P0", "name": "PCI (target physical cell ID)", "length": "0x00 0x02" },
+      { "id": "P1", "name": "ARFCN-DL (absolute frequency of SSB)", "length": "0x00 0x03" }
+    ],
+    "outputKey": "KNG-RAN*",
+    "applicability": "Handover to gNB, RRC_INACTIVE → RRC_CONNECTED",
+    "notes": "NH used when NCC increases; current key used for horizontal derivation"
+  },
+  {
+    "id": "kng-ran-star-ngenb",
+    "name": "KNG-RAN* derivation for target ng-eNB",
+    "section": "A.12",
+    "fc": "0x71",
+    "inputKey": "NH (256-bit) or current KgNB/KeNB",
+    "parameters": [
+      { "id": "P0", "name": "PCI (target physical cell ID)", "length": "0x00 0x02" },
+      { "id": "P1", "name": "EARFCN-DL (target physical cell downlink frequency)", "length": "0x00 0x03" }
+    ],
+    "outputKey": "KNG-RAN*",
+    "applicability": "Handover to ng-eNB",
+    "notes": "Similar to A.11 but for ng-eNB targets (uses EARFCN-DL instead of ARFCN-DL)"
+  },
+  {
+    "id": "kamf-prime-mobility",
+    "name": "KAMF → KAMF' derivation in mobility",
+    "section": "A.13",
+    "fc": "0x72",
+    "inputKey": "KAMF",
+    "parameters": [
+      { "id": "P0", "name": "DIRECTION (0x00=idle mode, 0x01=handover)", "length": "0x00 0x01" },
+      { "id": "P1", "name": "COUNT (downlink NAS COUNT for HO, uplink for idle)", "length": "0x00 0x04" }
+    ],
+    "outputKey": "KAMF'",
+    "applicability": "Handover and mobility registration updates",
+    "notes": "Direction distinguishes idle mode mobility from handover"
+  },
+  {
+    "id": "kasme-prime-idle",
+    "name": "KAMF → KASME' derivation (5G→EPS idle mode)",
+    "section": "A.14.1",
+    "fc": "0x73",
+    "inputKey": "KAMF",
+    "parameters": [
+      { "id": "P0", "name": "NAS uplink COUNT value", "length": "0x00 0x04" }
+    ],
+    "outputKey": "KASME'",
+    "applicability": "5G to EPS interworking — idle mode",
+    "notes": "Security context mapping from 5G to EPS during idle mode mobility"
+  },
+  {
+    "id": "kasme-prime-ho",
+    "name": "KAMF → KASME' derivation (5G→EPS handover)",
+    "section": "A.14.2",
+    "fc": "0x74",
+    "inputKey": "KAMF",
+    "parameters": [
+      { "id": "P0", "name": "NAS downlink COUNT value", "length": "0x00 0x04" }
+    ],
+    "outputKey": "KASME'",
+    "applicability": "5G to EPS interworking — handover",
+    "notes": "Security context mapping from 5G to EPS during handover"
+  },
+  {
+    "id": "kamf-prime-idle-eps",
+    "name": "KASME → KAMF' derivation (EPS→5G idle mode)",
+    "section": "A.15.1",
+    "fc": "0x75",
+    "inputKey": "KASME",
+    "parameters": [
+      { "id": "P0", "name": "NAS uplink COUNT of TAU in Registration Request", "length": "0x00 0x04" }
+    ],
+    "outputKey": "KAMF'",
+    "applicability": "EPS to 5G interworking — idle mode",
+    "notes": "Security context mapping from EPS to 5G during idle mode mobility"
+  },
+  {
+    "id": "kamf-prime-ho-eps",
+    "name": "KASME → KAMF' derivation (EPS→5G handover)",
+    "section": "A.15.2",
+    "fc": "0x76",
+    "inputKey": "KASME",
+    "parameters": [
+      { "id": "P0", "name": "NH value", "length": "0x00 0x20" }
+    ],
+    "outputKey": "KAMF'",
+    "applicability": "EPS to 5G interworking — handover",
+    "notes": "Uses NH instead of COUNT for handover case"
+  },
+  {
+    "id": "ksn",
+    "name": "KSN derivation for dual connectivity",
+    "section": "A.16",
+    "fc": "0x79",
+    "inputKey": "KeNB (MN=ng-eNB) or KgNB (MN=gNB)",
+    "parameters": [
+      { "id": "P0", "name": "SN Counter value", "length": "0x00 0x02" }
+    ],
+    "outputKey": "KSN",
+    "applicability": "Dual connectivity and SCPAC",
+    "notes": "SN Counter value must never be reused for same input KEY"
+  },
+  {
+    "id": "sor-mac-iausf",
+    "name": "SoR-MAC-IAUSF generation",
+    "section": "A.17",
+    "fc": "0x77",
+    "inputKey": "KAUSF",
+    "parameters": [
+      { "id": "P0", "name": "SoR header", "length": "variable" },
+      { "id": "P1", "name": "CounterSoR", "length": "variable" },
+      { "id": "P2", "name": "SoR transparent container (beyond octet 22)", "length": "variable (optional)" }
+    ],
+    "outputKey": "SoR-MAC-IAUSF (128 least significant bits)",
+    "applicability": "Steering of Roaming — AUSF side",
+    "notes": "P2/L2 optional; matches Nausf_SoRProtection service operation"
+  },
+  {
+    "id": "sor-mac-iue",
+    "name": "SoR-MAC-IUE / SoR-XMAC-IUE generation",
+    "section": "A.18",
+    "fc": "0x78",
+    "inputKey": "KAUSF",
+    "parameters": [
+      { "id": "P0", "name": "0x01 (SoR Acknowledgement)", "length": "0x00 0x01" },
+      { "id": "P1", "name": "CounterSoR", "length": "variable" }
+    ],
+    "outputKey": "SoR-MAC-IUE / SoR-XMAC-IUE (128 least significant bits)",
+    "applicability": "Steering of Roaming — UE side",
+    "notes": "Fixed P0 value for acknowledgement"
+  },
+  {
+    "id": "upu-mac-iausf",
+    "name": "UPU-MAC-IAUSF generation",
+    "section": "A.19",
+    "fc": "0x7B",
+    "inputKey": "KAUSF",
+    "parameters": [
+      { "id": "P0", "name": "UE Parameters Update Data (from octet 23 of TS 24.501 §9.11.3.53A)", "length": "variable" },
+      { "id": "P1", "name": "CounterUPU", "length": "variable" }
+    ],
+    "outputKey": "UPU-MAC-IAUSF (128 least significant bits)",
+    "applicability": "UE Parameters Update — AUSF side",
+    "notes": "Parallels SoR-MAC-IAUSF for UE parameter updates"
+  },
+  {
+    "id": "upu-mac-iue",
+    "name": "UPU-MAC-IUE / UPU-XMAC-IUE generation",
+    "section": "A.20",
+    "fc": "0x7C",
+    "inputKey": "KAUSF",
+    "parameters": [
+      { "id": "P0", "name": "0x01 (UPU Acknowledgement)", "length": "0x00 0x01" },
+      { "id": "P1", "name": "CounterUPU", "length": "variable" }
+    ],
+    "outputKey": "UPU-MAC-IUE / UPU-XMAC-IUE (128 least significant bits)",
+    "applicability": "UE Parameters Update — UE side",
+    "notes": "Parallels SoR-MAC-IUE for UE parameter updates"
+  },
+  {
+    "id": "kasme-srvcc",
+    "name": "KAMF → KASME_SRVCC derivation",
+    "section": "A.21",
+    "fc": "0x7D",
+    "inputKey": "KAMF",
+    "parameters": [
+      { "id": "P0", "name": "NAS downlink COUNT value", "length": "0x00 0x04" }
+    ],
+    "outputKey": "KASME_SRVCC",
+    "applicability": "SRVCC from 5G to UTRAN CS",
+    "notes": "Single-Radio Voice Call Continuity interworking"
+  },
+  {
+    "id": "ktipsec-ktnap-kft",
+    "name": "KTIPSec / KTNAP / KFT derivation",
+    "section": "A.22",
+    "fc": "0x84",
+    "inputKey": "KTNGF (256-bit) or KTWIF (256-bit)",
+    "parameters": [
+      { "id": "P0", "name": "usage type distinguisher (0x01=IPSec, 0x02=TNAP, 0x03=FT)", "length": "0x00 0x01" }
+    ],
+    "outputKey": "KTIPSec (0x01) or KTNAP (0x02) or KFT (0x03)",
+    "applicability": "Trusted non-3GPP access security",
+    "notes": "Distinguisher determines which key is derived"
+  },
+  {
+    "id": "kiab",
+    "name": "KIAB (PSK) generation for IAB",
+    "section": "A.23",
+    "fc": "0x83",
+    "inputKey": "KgNB (post-setup) or S-KgNB (EN-DC) or KSN (NR-DC)",
+    "parameters": [
+      { "id": "P0", "name": "IAB-donor-CU IP address", "length": "variable" },
+      { "id": "P1", "name": "IAB-node DU IP address", "length": "variable" }
+    ],
+    "outputKey": "KIAB (full 256-bit KDF output used as PSK)",
+    "applicability": "IAB (Integrated Access and Backhaul) F1 interface security",
+    "notes": "Multiple variants for CP-UP separation (KIAB-CU-CP, KIAB-CU-UP). Full 256 bits used as PSK."
+  }
+]

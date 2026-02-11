@@ -1,0 +1,96 @@
+{
+  "spec": "TS 33.501",
+  "section": "5.11 / Annex D",
+  "ciphering": [
+    {
+      "id": "0000",
+      "name": "NEA0",
+      "fullName": "Null ciphering algorithm",
+      "keyLength": null,
+      "description": "Generates a keystream of all zeroes; no confidentiality protection",
+      "ref": "TS 33.501 Annex D.1"
+    },
+    {
+      "id": "0001",
+      "name": "128-NEA1",
+      "fullName": "128-bit SNOW 3G based ciphering algorithm",
+      "keyLength": 128,
+      "description": "Stream cipher based on SNOW 3G",
+      "ref": "TS 35.215"
+    },
+    {
+      "id": "0010",
+      "name": "128-NEA2",
+      "fullName": "128-bit AES based ciphering algorithm",
+      "keyLength": 128,
+      "description": "AES in CTR mode",
+      "ref": "TS 33.401 Annex B"
+    },
+    {
+      "id": "0011",
+      "name": "128-NEA3",
+      "fullName": "128-bit ZUC based ciphering algorithm",
+      "keyLength": 128,
+      "description": "Stream cipher based on ZUC",
+      "ref": "TS 35.221"
+    }
+  ],
+  "integrity": [
+    {
+      "id": "0000",
+      "name": "NIA0",
+      "fullName": "Null Integrity Protection algorithm",
+      "keyLength": null,
+      "description": "Generates a 32-bit MAC of all zeroes; replay protection not activated",
+      "ref": "TS 33.501 Annex D.1"
+    },
+    {
+      "id": "0001",
+      "name": "128-NIA1",
+      "fullName": "128-bit SNOW 3G based integrity algorithm",
+      "keyLength": 128,
+      "description": "MAC function based on SNOW 3G",
+      "ref": "TS 35.215"
+    },
+    {
+      "id": "0010",
+      "name": "128-NIA2",
+      "fullName": "128-bit AES based integrity algorithm",
+      "keyLength": 128,
+      "description": "AES in CMAC mode",
+      "ref": "TS 33.401 Annex B"
+    },
+    {
+      "id": "0011",
+      "name": "128-NIA3",
+      "fullName": "128-bit ZUC based integrity algorithm",
+      "keyLength": 128,
+      "description": "MAC function based on ZUC",
+      "ref": "TS 35.221"
+    }
+  ],
+  "typeDistinguishers": [
+    { "value": "0x01", "name": "N-NAS-enc-alg", "description": "NAS encryption algorithm" },
+    { "value": "0x02", "name": "N-NAS-int-alg", "description": "NAS integrity algorithm" },
+    { "value": "0x03", "name": "N-RRC-enc-alg", "description": "RRC encryption algorithm" },
+    { "value": "0x04", "name": "N-RRC-int-alg", "description": "RRC integrity algorithm" },
+    { "value": "0x05", "name": "N-UP-enc-alg", "description": "UP encryption algorithm" },
+    { "value": "0x06", "name": "N-UP-int-alg", "description": "UP integrity algorithm" }
+  ],
+  "algorithmInputs": {
+    "ciphering": {
+      "key": "128-bit cipher key (KEY)",
+      "count": "32-bit COUNT",
+      "bearer": "5-bit BEARER identity",
+      "direction": "1-bit DIRECTION (0=uplink, 1=downlink)",
+      "length": "LENGTH of plaintext"
+    },
+    "integrity": {
+      "key": "128-bit integrity key (KEY)",
+      "count": "32-bit COUNT",
+      "bearer": "5-bit BEARER identity",
+      "direction": "1-bit DIRECTION (0=uplink, 1=downlink)",
+      "message": "MESSAGE to protect"
+    }
+  }
+}

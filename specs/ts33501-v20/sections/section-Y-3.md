@@ -1,0 +1,6 @@
+# Y.3	Transport security protection for MSGin5G interfaces
+
+The MSGin5G-1 interface may be protected by TLS based on KAF established by AKMA as specified in TS 33.535 [91]. The MSGin5G Client and the MSGin5G Server establish the TLS session following the procedures defined in Annex B of TS 33.535 [91].
+The MSGin5G-1 interface may be protected using mechanisms other than TLS with AKMA, depending on the Ua* protocols. If DTLS with AKMA is used, the MSGin5G Client and the MSGin5G Server establish the DTLS session following the procedures defined in Annex C of TS 33.535 [91].
+For the data protection over MSGin5G-3 interface between MSGin5G Server and Application Server, if the Application Server is inside the operator domain, the transport security protection on SBI interface shall be reused as specified in clause 13. If the Application Server is outside the operator domain, the Application Server shall connect to the MSGin5G Server via NEF, clause 12.3 in the present document is applicable with the Application Server taking the role of the AF.
+For MSGin5G-2, MSGin5G-4, MSGin5G-7 and MSGin5G-8 interfaces, TLS shall be used for transport protection unless network security is provided by other means.
